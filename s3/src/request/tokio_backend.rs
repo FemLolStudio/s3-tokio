@@ -2,19 +2,27 @@ extern crate base64;
 extern crate md5;
 
 use bytes::Bytes;
+use futures::stream;
 use futures::TryStreamExt;
-use hyper::{Body, Client};
+use http_body_util::BodyExt;
+use http_body_util::BodyStream;
+use http_body_util::Full;
+use http_body_util::StreamBody;
+use hyper::body::Body;
+use hyper::body::Frame;
+use hyper::body::Incoming;
 use hyper_tls::HttpsConnector;
+use hyper_util::client::legacy::Client;
+use hyper_util::rt::TokioExecutor;
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use tokio_stream::StreamExt;
 
 use super::request_trait::{Request, ResponseData};
 use crate::bucket::Bucket;
 use crate::command::Command;
 use crate::command::HttpMethod;
 use crate::error::S3Error;
-
-use tokio_stream::StreamExt;
 
 pub use crate::request::tokio_backend::HyperRequest as RequestImpl;
 pub use tokio::io::AsyncRead;
@@ -35,17 +43,17 @@ pub struct HyperRequest<'a> {
 
 #[async_trait::async_trait]
 impl<'a> Request for HyperRequest<'a> {
-    type Response = http::Response<Body>;
+    type Response = http::Response<Incoming>;
     type HeaderMap = http::header::HeaderMap;
 
-    async fn response(&self) -> Result<http::Response<Body>, S3Error> {
+    async fn response(&self) -> Result<http::Response<Incoming>, S3Error> {
         // Build headers
         let headers = match self.headers() {
             Ok(headers) => headers,
             Err(e) => return Err(e),
         };
         let https_connector = HttpsConnector::new();
-        let client = Client::builder().build::<_, hyper::Body>(https_connector);
+        let client = Client::builder(TokioExecutor::new()).build::<_, Full<Bytes>>(https_connector);
 
         let method = match self.command.http_verb() {
             HttpMethod::Delete => http::Method::DELETE,
@@ -55,7 +63,7 @@ impl<'a> Request for HyperRequest<'a> {
             HttpMethod::Head => http::Method::HEAD,
         };
 
-        let request = {
+        let request: http::Request<Full<Bytes>> = {
             let mut request = http::Request::builder()
                 .method(method)
                 .uri(self.url()?.as_str());
@@ -63,8 +71,7 @@ impl<'a> Request for HyperRequest<'a> {
             for (header, value) in headers.iter() {
                 request = request.header(header, value);
             }
-
-            request.body(Body::from(self.request_body()))?
+            request.body(Full::from(Bytes::from(self.request_body())))?
         };
         let span = span!(
             Level::DEBUG,
@@ -86,8 +93,8 @@ impl<'a> Request for HyperRequest<'a> {
 
         if cfg!(feature = "fail-on-err") && !response.status().is_success() {
             let status = response.status().as_u16();
-            let text =
-                String::from_utf8(hyper::body::to_bytes(response.into_body()).await?.into())?;
+            let data = response.collect().await?;
+            let text = String::from_utf8(data.to_bytes().to_vec())?;
             return Err(S3Error::HttpFailWithBody(status, text));
         }
 
@@ -117,7 +124,7 @@ impl<'a> Request for HyperRequest<'a> {
                 Bytes::from("")
             }
         } else {
-            hyper::body::to_bytes(response.into_body()).await?
+            response.collect().await?.to_bytes()
         };
         Ok(ResponseData::new(body_vec, status_code, response_headers))
     }
@@ -127,12 +134,16 @@ impl<'a> Request for HyperRequest<'a> {
         writer: &mut T,
     ) -> Result<u16, S3Error> {
         let response = self.response().await?;
-
         let status_code = response.status();
-        let mut stream = response.into_body().into_stream();
+
+        let body = response.into_body();
+        let mut stream = BodyStream::new(body);
 
         while let Some(item) = stream.next().await {
-            writer.write_all(&item?).await?;
+            let data = item?;
+            if let Some(data) = data.data_ref() {
+                writer.write_all(&data).await?;
+            }
         }
 
         Ok(status_code.as_u16())
@@ -141,7 +152,9 @@ impl<'a> Request for HyperRequest<'a> {
     async fn response_data_to_stream(&self) -> Result<ResponseDataStream, S3Error> {
         let response = self.response().await?;
         let status_code = response.status();
-        let stream = response.into_body().into_stream().map_err(S3Error::Hyper);
+
+        let data = response.collect().await?;
+        let stream = stream::once(async move { Ok(data.to_bytes()) });
 
         Ok(ResponseDataStream {
             bytes: Box::pin(stream),

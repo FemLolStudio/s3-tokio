@@ -24,6 +24,8 @@ pub enum S3Error {
     Http(#[from] http::Error),
     #[error("hyper: {0}")]
     Hyper(#[from] hyper::Error),
+    #[error("hyperUtil: {0}")]
+    HyperUtil(#[from] hyper_util::client::legacy::Error),
     #[error("header to string: {0}")]
     HeaderToStr(#[from] http::header::ToStrError),
     #[error("from utf8: {0}")]
