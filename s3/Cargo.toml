@@ -36,7 +36,7 @@ femlol-aws-creds = {version = "0.37", default-features = false, features = ["rus
 # femlol-aws-creds = { path = "../aws-creds", default-features = false, features = ["rustls-tls"] }
 aws-region = "0.25"
 # aws-region = { path = "../aws-region", version = "0.25.4" }
-base64 = "0.21"
+base64 = "0.22"
 cfg-if = "1"
 time = { version = "0.3", default-features = false, features = ["macros"] }
 futures = { version = "0.3", default-features = false }
