@@ -58,7 +58,7 @@ hyper-util = { version = "0.1", default-features = false, features = [
     "tokio",
     #"stream",
 ] }
-hyper-rustls = { version = "0.26", default-features = false, features = ["ring", "webpki-roots", "http1", "http2"] }
+hyper-rustls = { version = "0.27", default-features = false, features = ["ring", "webpki-roots", "http1", "http2"] }
 hyper-timeout = "0.5"
 # hyper-tls = { version = "0.6", default-features = false }
 rustls = { version = "0.22", default-features = false }
