@@ -67,7 +67,7 @@ tracing = { version="0.1", default-features = false, optional = true }
 md5 = "0.7"
 percent-encoding = "2"
 serde = { version = "1", default-features = false, features = ["derive"]}
-quick-xml = { version = "0.31", features = ["serialize"] }
+quick-xml = { version = "0.32", features = ["serialize"] }
 sha2 = "0.10"
 thiserror = "1"
 tokio = { version = "1", features = [
