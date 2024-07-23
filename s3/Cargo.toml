@@ -78,7 +78,7 @@ tokio-util = "0.7"
 # tokio-native-tls = { version = "0.3" }
 tokio-stream = { version = "0.1", default-features = false }
 url = "2"
-minidom = { version = "0.15" }
+minidom = { version = "0.16" }
 bytes = { version = "1" }
 strum_macros = "0.26"
 
