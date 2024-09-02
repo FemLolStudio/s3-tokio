@@ -34,7 +34,7 @@ path = "../examples/gcs-tokio.rs"
 [dependencies]
 femlol-aws-creds = {version = "0.39", default-features = false, features = ["rustls-tls"]}
 # femlol-aws-creds = { path = "../aws-creds", default-features = false, features = ["rustls-tls"] }
-aws-region = "0.25"
+aws-region = "0.26"
 # aws-region = { path = "../aws-region", version = "0.25.4" }
 base64 = "0.22"
 # cfg-if = "1"
