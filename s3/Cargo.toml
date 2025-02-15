@@ -1,6 +1,6 @@
 [package]
 name = "s3-tokio"
-version = "0.39.4"
+version = "0.39.5"
 authors = ["FémLol Stúdió <femlol1femlol@gmail.com>", "Aalekh Patel <aalekh.gwpeck.7998@icloud.com>", "Drazen Urch"]
 description = "Rust library for working with AWS S3 and compatible object storage APIs"
 repository = "https://github.com/FemLolStudio/s3-tokio"
@@ -39,7 +39,7 @@ aws-region = "0.27"
 base64 = "0.22"
 # cfg-if = "1"
 time = { version = "0.3", default-features = false, features = ["macros"] }
-futures = { version = "0.3", default-features = false }
+futures = { version = "0.3", default-features = false, features = ["std"]}
 hex = "0.4"
 hmac = "0.12"
 http = "1"
@@ -67,9 +67,9 @@ tracing = { version="0.1", default-features = false, optional = true }
 md5 = "0.7"
 percent-encoding = "2"
 serde = { version = "1", default-features = false, features = ["derive"]}
-quick-xml = { version = "0.36", features = ["serialize"] }
+quick-xml = { version = "0.37", features = ["serialize"] }
 sha2 = "0.10"
-thiserror = "1"
+thiserror = "2"
 tokio = { version = "1", features = [
     "io-util",
     "fs"
@@ -80,7 +80,7 @@ tokio-stream = { version = "0.1", default-features = false }
 url = "2"
 minidom = { version = "0.16" }
 bytes = { version = "1" }
-strum_macros = "0.26"
+strum_macros = "0.27"
 
 [features]
 default = ["fail-on-err"]
