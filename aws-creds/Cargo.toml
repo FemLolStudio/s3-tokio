@@ -1,6 +1,6 @@
 [package]
 name = "femlol-aws-creds"
-version = "0.39.0"
+version = "0.39.1"
 authors = ["FémLol Stúdió <femlol1femlol@gmail.com>", "Drazen Urch"]
 description = "Tiny Rust library for working with Amazon IAM credential,s, supports `s3` crate"
 repository = "https://github.com/FemLolStudio/s3-tokio"
