@@ -26,7 +26,11 @@ pub fn create_client(
         https_connector.with_webpki_roots()
     };
 
-    let https_connector = https_connector.https_only().enable_http2().build();
+    let https_connector = if cfg!(feature = "http") {
+        https_connector.https_or_http().enable_http2().build()
+    } else {
+        https_connector.https_only().enable_http2().build()
+    };
 
     let mut timeout_connector = TimeoutConnector::new(https_connector);
     timeout_connector.set_connect_timeout(request_timeout);
