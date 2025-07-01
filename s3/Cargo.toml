@@ -87,6 +87,7 @@ default = ["fail-on-err"]
 no-verify-ssl = []
 fail-on-err = []
 tracing = ["dep:tracing"]
+http = []
 
 [dev-dependencies]
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "fs"] }

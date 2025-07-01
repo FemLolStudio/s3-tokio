@@ -49,6 +49,7 @@ There are a lot of various features that enable a wide variety of use cases, ref
 + `default` - only `fail-on-err`
 + `fail-on-err` - `panic` on any error
 + `no-verify-ssl` - disable SSL verification for endpoints, useful for custom regions
++ `http` - enable http scheme (disabled by default)
 
 ### Path or subdomain style URLs and headers
 
