@@ -1,6 +1,6 @@
 [package]
 name = "femlol-aws-creds"
-version = "0.39.1"
+version = "0.39.2"
 authors = ["FémLol Stúdió <femlol1femlol@gmail.com>", "Drazen Urch"]
 description = "Tiny Rust library for working with Amazon IAM credential,s, supports `s3` crate"
 repository = "https://github.com/FemLolStudio/s3-tokio"
@@ -18,11 +18,11 @@ path = "src/lib.rs"
 thiserror = "2"
 home = "0.5"
 rust-ini = "0.21"
-attohttpc = { version = "0.28", default-features = false, features = [
+attohttpc = { version = "0.29", default-features = false, features = [
     "json",
 ], optional = true }
 url = "2"
-quick-xml = { version = "0.37", features = ["serialize"] }
+quick-xml = { version = "0.38", features = ["serialize"] }
 serde = { version = "1", features = ["derive"] }
 time = { version = "0.3", features = ["serde", "serde-well-known"] }
 log = { version = "0.4", default-features = false }
