@@ -41,7 +41,7 @@ base64 = "0.22"
 time = { version = "0.3", default-features = false, features = ["macros"] }
 futures = { version = "0.3", default-features = false, features = ["std"]}
 hex = "0.4"
-hmac = "0.12"
+hmac = "0.13"
 http = "1"
 http-body-util = "0.1"
 hyper = { version = "1", default-features = false, features = [
