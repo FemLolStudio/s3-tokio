@@ -80,7 +80,7 @@ tokio-stream = { version = "0.1", default-features = false }
 url = "2"
 minidom = { version = "0.16" }
 bytes = { version = "1" }
-strum_macros = "0.27"
+strum_macros = "0.28"
 
 [features]
 default = ["fail-on-err"]
