@@ -68,7 +68,7 @@ md5 = "0.8"
 percent-encoding = "2"
 serde = { version = "1", default-features = false, features = ["derive"]}
 quick-xml = { version = "0.38", features = ["serialize"] }
-sha2 = "0.10"
+sha2 = "0.11"
 thiserror = "2"
 tokio = { version = "1", features = [
     "io-util",
